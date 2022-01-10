@@ -32,7 +32,7 @@ interface ApiService {
     }
 
     @Headers("x-api-key:${Constants.API_KEY}")
-    @GET("/top-headlines")
+    @GET("top-headlines")
     suspend fun getBreakingNews(
         @Query("country") country: String = "in",
         @Query("page") pageNumber: Int = 1,

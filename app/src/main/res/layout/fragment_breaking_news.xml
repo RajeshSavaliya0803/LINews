@@ -8,6 +8,8 @@
         <variable
             name="viewModel"
             type="com.example.linews.viewmodel.BreakingNewsViewModel" />
+
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +23,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{viewModel.loadingIndicator ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.loadingState ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
