@@ -9,7 +9,6 @@
             name="viewModel"
             type="com.example.linews.viewmodel.BreakingNewsViewModel" />
 
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +22,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{viewModel.loadingState ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.uiState.loading ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,8 +33,11 @@
             android:layout_height="0dp"
             android:overScrollMode="never"
             android:scrollbars="none"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:setAdapter = "@{viewModel.uiState.breakNewsItems}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_breaking_news_post" />

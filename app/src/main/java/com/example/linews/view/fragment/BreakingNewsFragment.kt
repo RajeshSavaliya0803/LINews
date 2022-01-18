@@ -1,23 +1,38 @@
 package com.example.linews.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.linews.R
 import com.example.linews.databinding.FragmentBreakingNewsBinding
 import com.example.linews.repository.NewsRepository
-import com.example.linews.utils.UIState
 import com.example.linews.viewmodel.BreakingNewsViewModel
 import com.example.linews.viewmodel.BreakingNewsViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class BreakingNewsFragment : Fragment() {
 
     private lateinit var binding: FragmentBreakingNewsBinding
-    private lateinit var model: BreakingNewsViewModel
+    private val model : BreakingNewsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +41,6 @@ class BreakingNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_breaking_news, container, false)
-        model = ViewModelProvider(this,BreakingNewsViewModelFactory(NewsRepository()))[BreakingNewsViewModel::class.java]
         binding.viewModel = model
         binding.lifecycleOwner = this.viewLifecycleOwner
         return binding.root
@@ -34,15 +48,13 @@ class BreakingNewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        model.breakingNewsData.observe(viewLifecycleOwner, { state->
-            when(state){
-                is UIState.Failed -> {
-                }
-                is UIState.Loading -> {
-                }
-                is UIState.Success-> {
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.uiState.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {
+                if(it.errorMessage != null) {
+                    //Display Toast
+                    Log.e("TAG", "onViewCreated: Error: ${it.errorMessage}", )
                 }
             }
-        })
+        }
     }
 }
