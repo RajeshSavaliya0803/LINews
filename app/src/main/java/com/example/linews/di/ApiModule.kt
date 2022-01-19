@@ -1,8 +1,7 @@
 package com.example.linews.di
-
-import com.example.linews.BuildConfig
+import androidx.viewbinding.BuildConfig
 import com.example.linews.api.ApiService
-import com.example.linews.repository.NewsRepository
+import com.example.linews.data.repository.NewsRepository
 import com.example.linews.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -50,5 +49,6 @@ object ApiModule {
     @Singleton
     @Provides
     fun providesRepository(apiService: ApiService) = NewsRepository(apiService)
+
 
 }

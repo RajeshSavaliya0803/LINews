@@ -1,22 +1,16 @@
 package com.example.linews.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
+import com.example.linews.adapter.BreakingNewsPagingAdapter
+import com.example.linews.data.datasource.BreakingNewsPagingSource
 import com.example.linews.model.ArticlesItem
-import com.example.linews.model.NewsApiResponse
-import com.example.linews.repository.NewsRepository
+import com.example.linews.data.repository.NewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
 
@@ -32,46 +26,65 @@ class BreakingNewsViewModel @Inject constructor(private  var repository: NewsRep
 
     private val _uiState = MutableStateFlow(BreakingNewsUiState())
     val uiState: StateFlow<BreakingNewsUiState> = _uiState.asStateFlow()
+    lateinit var adapter: BreakingNewsPagingAdapter
+
 
     init {
-        Log.e("TAG","BreakingNewsViewModel initialized")
+        setUpAdapter()
         fetchBreakingNews()
     }
 
+    private fun setUpAdapter() {
+        //TODO: Try loadState here
+        adapter = BreakingNewsPagingAdapter()
+        adapter.addLoadStateListener {
+
+        }
+
+    }
+
     private fun fetchBreakingNews() {
+        Log.e("TAG", "In Fetch Breaking News")
+        viewModelScope.launch {
+            repository.getBreakingNews().cachedIn(viewModelScope).collect {
+                adapter.submitData(it)
 
-        viewModelScope.launch{
-
-            Log.e("TAG", "ViewModel Thread: ${Thread.currentThread().name} ", )
-            try{
-                val response = repository.getBreakingNews()
-                if(response.isSuccessful){
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            breakNewsItems = response.body()?.articles,
-                            errorMessage = null
-                        )
-                    }
-                }else{
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            breakNewsItems = emptyList(),
-                            errorMessage = "Something went wrong"
-                        )
-                    }
-                }
-
-            }catch (e: IOException){
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        breakNewsItems = emptyList(),
-                        errorMessage = "${e.message}"
-                    )
-                }
             }
         }
     }
+
+//    private fun fetchBreakingNews() {
+//
+//        viewModelScope.launch{
+//            try{
+//                val response = repository.getBreakingNews()
+//                if(response.isSuccessful){
+//                    _uiState.update {
+//                        it.copy(
+//                            isLoading = false,
+//                            breakNewsItems = response.body()?.articles,
+//                            errorMessage = null
+//                        )
+//                    }
+//                }else{
+//                    _uiState.update {
+//                        it.copy(
+//                            isLoading = false,
+//                            breakNewsItems = emptyList(),
+//                            errorMessage = "Something went wrong"
+//                        )
+//                    }
+//                }
+//
+//            }catch (e: IOException){
+//                _uiState.update {
+//                    it.copy(
+//                        isLoading = false,
+//                        breakNewsItems = emptyList(),
+//                        errorMessage = "${e.message}"
+//                    )
+//                }
+//            }
+//        }
+//    }
 }
