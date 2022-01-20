@@ -11,6 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.linews.R
 import com.example.linews.databinding.FragmentBreakingNewsBinding
 import com.example.linews.viewmodel.BreakingNewsViewModel
@@ -22,7 +24,7 @@ import kotlinx.coroutines.launch
 class BreakingNewsFragment : Fragment() {
 
     private lateinit var binding: FragmentBreakingNewsBinding
-    private val model : BreakingNewsViewModel by viewModels()
+    private val viewModel : BreakingNewsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,15 +33,19 @@ class BreakingNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_breaking_news, container, false)
-        binding.viewModel = model
+        binding.viewModel = viewModel
         binding.lifecycleOwner = this.viewLifecycleOwner
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.rvBreakingNews.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL,false)
+        binding.rvBreakingNews.adapter = viewModel.adapter
+
         viewLifecycleOwner.lifecycleScope.launch {
-            model.uiState.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {
+            viewModel.uiState.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {
                 if(it.errorMessage != null) {
                     //Display Toast
                     Log.e("TAG", "onViewCreated: Error: ${it.errorMessage}", )

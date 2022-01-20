@@ -22,8 +22,9 @@ class NewsRepository @Inject constructor(private val apiService: ApiService) {
     fun getBreakingNews() : Flow<PagingData<ArticlesItem>>{
         return Pager(
          config = PagingConfig(
-             pageSize = 10,
+             pageSize = 3,
              enablePlaceholders = false,
+             initialLoadSize = 10
          ),
             pagingSourceFactory = {
                 BreakingNewsPagingSource(apiService)

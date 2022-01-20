@@ -1,5 +1,5 @@
 package com.example.linews.di
-import androidx.viewbinding.BuildConfig
+import com.example.linews.BuildConfig
 import com.example.linews.api.ApiService
 import com.example.linews.data.repository.NewsRepository
 import com.example.linews.utils.Constants

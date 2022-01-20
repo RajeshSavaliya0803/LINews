@@ -3,5 +3,6 @@
     <string name="home">Home</string>
     <string name="search">Search</string>
     <string name="saved">Saved</string>
+    <string name="retry">Retry</string>
 
 </resources>

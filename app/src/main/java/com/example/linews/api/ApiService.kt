@@ -16,7 +16,7 @@ interface ApiService {
     suspend fun getBreakingNews(
         @Query("country") country: String = "in",
         @Query("page") pageNumber: Int,
-        @Query("pageSize") pageSize: Int = 10,
+        @Query("pageSize") pageSize: Int = 20,
     ): Response<NewsApiResponse>
 
 }

@@ -15,11 +15,6 @@ import com.example.linews.adapter.BreakingNewsAdapter
 import com.example.linews.model.ArticlesItem
 import com.example.linews.viewmodel.BreakingNewsUiState
 
-@BindingAdapter("setAdapter")
-fun setAdapter(recyclerView: RecyclerView, items: List<ArticlesItem?>?){
-    recyclerView.adapter = BreakingNewsAdapter(items)
-}
-
 @BindingAdapter("imageUrl")
 fun imageUrl(imageView: ImageView, imageUrl: String?){
     imageView.load(imageUrl){
@@ -35,7 +30,7 @@ fun imageUrl(imageView: ImageView, imageUrl: String?){
 
 @BindingAdapter("setNoNewsVisibility")
 fun setNoNewsVisibility(textView: TextView, uiState: BreakingNewsUiState){
-    if(!uiState.isLoading && uiState.breakNewsItems!!.isEmpty()){
+    if(!uiState.initialLoading && uiState.hasData == false){
         textView.visibility = View.VISIBLE
     }else{
         textView.visibility = View.GONE
