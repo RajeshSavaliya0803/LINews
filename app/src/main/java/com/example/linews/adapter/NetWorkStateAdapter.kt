@@ -28,7 +28,7 @@ class NetWorkStateAdapter(private val retry : ()-> Unit) : LoadStateAdapter<NetW
 
         init {
             binding.retryButton.setOnClickListener {
-                retry
+                retry.invoke()
             }
         }
 
@@ -36,8 +36,7 @@ class NetWorkStateAdapter(private val retry : ()-> Unit) : LoadStateAdapter<NetW
             with(binding) {
                 progressBar.isVisible = loadState is LoadState.Loading
                 retryButton.isVisible = loadState is LoadState.Error
-                errorMsg.isVisible =
-                    !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()
+                errorMsg.isVisible = !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()
                 errorMsg.text = (loadState as? LoadState.Error)?.error?.message
             }
         }

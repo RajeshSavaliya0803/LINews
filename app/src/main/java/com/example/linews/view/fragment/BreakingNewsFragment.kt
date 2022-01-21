@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.linews.R
+import com.example.linews.adapter.NetWorkStateAdapter
 import com.example.linews.databinding.FragmentBreakingNewsBinding
 import com.example.linews.viewmodel.BreakingNewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +43,7 @@ class BreakingNewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvBreakingNews.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL,false)
-        binding.rvBreakingNews.adapter = viewModel.adapter
+        binding.rvBreakingNews.adapter = viewModel.adapter.withLoadStateFooter(NetWorkStateAdapter{viewModel.adapter.retry()})
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {

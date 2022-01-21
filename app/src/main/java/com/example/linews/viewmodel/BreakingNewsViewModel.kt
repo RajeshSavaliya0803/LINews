@@ -27,16 +27,14 @@ class BreakingNewsViewModel @Inject constructor(private  var repository: NewsRep
 
     private val _uiState = MutableStateFlow(BreakingNewsUiState())
     val uiState: StateFlow<BreakingNewsUiState> = _uiState.asStateFlow()
-    lateinit var adapter: BreakingNewsPagingAdapter
+    val adapter: BreakingNewsPagingAdapter = BreakingNewsPagingAdapter()
 
 
     init {
-        setUpAdapter()
         fetchBreakingNews()
+        loadStateListener()
     }
-
-    private fun setUpAdapter() {
-        adapter = BreakingNewsPagingAdapter()
+    private fun loadStateListener(){
         adapter.addLoadStateListener { listener ->
             when(listener.refresh){
                 is LoadState.NotLoading -> {
@@ -58,10 +56,6 @@ class BreakingNewsViewModel @Inject constructor(private  var repository: NewsRep
                 }
             }
         }
-        adapter.withLoadStateFooter(NetWorkStateAdapter {
-            adapter.retry()
-        })
-
     }
 
     private fun fetchBreakingNews() {
@@ -72,39 +66,4 @@ class BreakingNewsViewModel @Inject constructor(private  var repository: NewsRep
             }
         }
     }
-
-//    private fun fetchBreakingNews() {
-//
-//        viewModelScope.launch{
-//            try{
-//                val response = repository.getBreakingNews()
-//                if(response.isSuccessful){
-//                    _uiState.update {
-//                        it.copy(
-//                            isLoading = false,
-//                            breakNewsItems = response.body()?.articles,
-//                            errorMessage = null
-//                        )
-//                    }
-//                }else{
-//                    _uiState.update {
-//                        it.copy(
-//                            isLoading = false,
-//                            breakNewsItems = emptyList(),
-//                            errorMessage = "Something went wrong"
-//                        )
-//                    }
-//                }
-//
-//            }catch (e: IOException){
-//                _uiState.update {
-//                    it.copy(
-//                        isLoading = false,
-//                        breakNewsItems = emptyList(),
-//                        errorMessage = "${e.message}"
-//                    )
-//                }
-//            }
-//        }
-//    }
 }
