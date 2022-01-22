@@ -1,5 +1,6 @@
 package com.example.linews.model
 
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
 
 data class NewsApiResponse(
@@ -14,16 +15,22 @@ data class NewsApiResponse(
 	val status: String? = null
 )
 
+
 data class Source(
 
 	@field:SerializedName("name")
 	val name: String? = null,
 
 	@field:SerializedName("id")
-	val id: Any? = null
+	val sourceId: String? = null
 )
 
+
+@Entity(tableName = "article")
 data class ArticlesItem(
+
+	@PrimaryKey(autoGenerate = true)
+	val id: Int? = null,
 
 	@field:SerializedName("publishedAt")
 	val publishedAt: String? = null,
@@ -37,6 +44,7 @@ data class ArticlesItem(
 	@field:SerializedName("description")
 	val description: String? = null,
 
+	@Embedded
 	@field:SerializedName("source")
 	val source: Source? = null,
 

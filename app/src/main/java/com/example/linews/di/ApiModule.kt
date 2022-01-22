@@ -1,6 +1,7 @@
 package com.example.linews.di
 import com.example.linews.BuildConfig
 import com.example.linews.api.ApiService
+import com.example.linews.data.database.SavedNewsDao
 import com.example.linews.data.repository.NewsRepository
 import com.example.linews.utils.Constants
 import dagger.Module
@@ -48,7 +49,7 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun providesRepository(apiService: ApiService) = NewsRepository(apiService)
+    fun providesRepository(apiService: ApiService,dao: SavedNewsDao) = NewsRepository(apiService,dao)
 
 
 }

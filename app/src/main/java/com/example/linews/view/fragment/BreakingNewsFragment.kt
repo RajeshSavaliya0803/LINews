@@ -6,17 +6,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.linews.R
+import com.example.linews.adapter.BreakingNewsPagingAdapter
 import com.example.linews.adapter.NetWorkStateAdapter
 import com.example.linews.databinding.FragmentBreakingNewsBinding
 import com.example.linews.viewmodel.BreakingNewsViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -26,6 +30,7 @@ class BreakingNewsFragment : Fragment() {
 
     private lateinit var binding: FragmentBreakingNewsBinding
     private val viewModel : BreakingNewsViewModel by viewModels()
+    private lateinit var adapter : BreakingNewsPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,14 +47,38 @@ class BreakingNewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvBreakingNews.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL,false)
-        binding.rvBreakingNews.adapter = viewModel.adapter.withLoadStateFooter(NetWorkStateAdapter{viewModel.adapter.retry()})
+        setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {
-                if(it.errorMessage != null) {
-                    //Display Toast
-                    Log.e("TAG", "onViewCreated: Error: ${it.errorMessage}", )
+            viewModel.getBreakingNews().flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {
+                adapter.submitData(it)
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvBreakingNews.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL,false)
+
+        adapter = BreakingNewsPagingAdapter(viewModel)
+
+        binding.rvBreakingNews.adapter = adapter.withLoadStateFooter(NetWorkStateAdapter{adapter.retry()})
+
+        adapter.addLoadStateListener { listener ->
+            when(listener.refresh){
+                is LoadState.NotLoading -> {
+                    if(binding.refreshing == true){
+                        binding.refreshing = false
+                        binding.hasData = adapter.itemCount != 0
+                    }
+
+
+                }
+                LoadState.Loading -> {
+                    binding.refreshing = true
+
+                }
+                is LoadState.Error -> {
+                    Toast.makeText(context, (listener.refresh as LoadState.Error).error.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
         }

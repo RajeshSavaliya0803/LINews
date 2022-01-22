@@ -1,43 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="articleItem"
             type="com.example.linews.model.ArticlesItem" />
+
+        <variable
+            name="viewModel"
+            type="com.example.linews.viewmodel.BreakingNewsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <ImageView
             android:id="@+id/newsItemBanner"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:imageUrl="@{articleItem.urlToImage}"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginEnd="8dp"
             android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:imageUrl="@{articleItem.urlToImage}"
+            app:layout_constraintBottom_toTopOf="@+id/imageButton"
+            app:layout_constraintEnd_toStartOf="@+id/newsItemTitle"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/newsItemTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="@{articleItem.title}"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/newsDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/newsItemBanner"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title here" />
+
+        <TextView
+            android:id="@id/newsDescription"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:maxLines="4"
+            android:text="@{articleItem.description}"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@+id/newsPublishedDate"
+            app:layout_constraintEnd_toEndOf="@+id/newsItemTitle"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/newsItemTitle"
+            app:layout_constraintTop_toBottomOf="@+id/newsItemTitle"
+            tools:text="Description here" />
+
+        <TextView
+            android:id="@+id/newsPublishedDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/purple_500"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/newsItemBanner"
+            app:layout_constraintEnd_toEndOf="@+id/newsDescription"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/newsItemBanner"
+            app:layout_constraintTop_toBottomOf="@+id/newsDescription"
+            app:setFormattedDateText="@{articleItem.publishedAt}"
+            tools:text="30/11/2022" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:onClick="@{() -> viewModel.addBookmark(articleItem)}"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_bookmark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newsItemBanner"
-            tools:text="Title here" />
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,4 +1,4 @@
-package com.example.linews.data.datasource
+package com.example.linews.data.pagedSource
 
 
 import android.util.Log
@@ -22,18 +22,15 @@ class BreakingNewsPagingSource(private val apiService: ApiService) : PagingSourc
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticlesItem> {
 
-        Log.e("TAG", "LOAD: loadSize- ${params.loadSize}", )
-
         val pageNumber = params.key ?: 1
 
         return try {
-            Log.e("TAG", "In Load: Before fetching", )
+
             val response = withContext(Dispatchers.IO){
                 apiService.getBreakingNews(pageNumber = pageNumber)
             }
 
             val pagedResponse = response.body()
-            Log.e("TAG", "In Load: after fetching : ${pagedResponse?.articles?.size}", )
             val data = pagedResponse?.articles
 
             val nextKey = if (data!!.isEmpty()) {
@@ -42,7 +39,6 @@ class BreakingNewsPagingSource(private val apiService: ApiService) : PagingSourc
                 pageNumber + 1
             }
 
-            Log.e("TAG", "In Load: Returning =  CurrentPage-${pageNumber}, Data Length-${data?.size}, Next Key-${nextKey}", )
             LoadResult.Page(
                 data = data.orEmpty(),
                 prevKey = if(pageNumber == 1) null else pageNumber-1,

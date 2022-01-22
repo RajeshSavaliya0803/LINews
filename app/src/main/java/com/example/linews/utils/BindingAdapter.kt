@@ -3,36 +3,35 @@ package com.example.linews.utils
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import coil.request.ImageRequest
+import coil.transform.RoundedCornersTransformation
 import com.example.linews.R
-import com.example.linews.adapter.BreakingNewsAdapter
-import com.example.linews.model.ArticlesItem
-import com.example.linews.viewmodel.BreakingNewsUiState
+import org.w3c.dom.Text
 
 @BindingAdapter("imageUrl")
 fun imageUrl(imageView: ImageView, imageUrl: String?){
     imageView.load(imageUrl){
         crossfade(true)
-        listener(
-            onError = {_, throwable ->
-                Log.e("TAG", "imageUrl:OnError $imageUrl, ${throwable.message} ")
-            }
-
-        )
+        crossfade(500)
+        transformations(RoundedCornersTransformation(20f))
+        placeholder(R.drawable.placeholder)
+        fallback(R.drawable.error_image)
     }
 }
 
-@BindingAdapter("setNoNewsVisibility")
-fun setNoNewsVisibility(textView: TextView, uiState: BreakingNewsUiState){
-    if(!uiState.initialLoading && uiState.hasData == false){
-        textView.visibility = View.VISIBLE
-    }else{
-        textView.visibility = View.GONE
+@BindingAdapter("setHasData")
+fun setHasData(view: TextView, hasData: Boolean?){
+    view.visibility = if(hasData != null){
+        if(!hasData) View.VISIBLE else View.GONE
     }
+    else{
+        View.GONE
+    }
+}
+
+@BindingAdapter("setFormattedDateText")
+fun setFormattedDateText(view:TextView, unformattedDate : String?){
+    view.text = unformattedDate?.convertDate()
 }

@@ -5,6 +5,15 @@
 
     <data>
         <import type="android.view.View"/>
+
+        <variable
+            name="refreshing"
+            type="Boolean" />
+
+        <variable
+            name="hasData"
+            type="Boolean" />
+
         <variable
             name="viewModel"
             type="com.example.linews.viewmodel.BreakingNewsViewModel" />
@@ -22,7 +31,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{viewModel.uiState.initialLoading ? View.VISIBLE : View.GONE}"
+            android:visibility="@{refreshing ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,16 +49,21 @@
             tools:listitem="@layout/item_breaking_news_post" />
 
         <TextView
-            android:id="@+id/noNews"
+            android:id="@+id/tvNoBreakingNews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No News Available"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:setNoNewsVisibility="@{viewModel.uiState}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:setHasData="@{hasData}"
+            tools:visibility="visible" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
