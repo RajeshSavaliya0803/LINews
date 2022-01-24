@@ -21,7 +21,6 @@ class BreakingNewsViewModel @Inject constructor(private  var repository: NewsRep
     fun getBreakingNews(): Flow<PagingData<ArticlesItem>> = repository.getBreakingNews().cachedIn(viewModelScope)
 
     fun addBookmark(article: ArticlesItem){
-        Log.e("TAG", "addBookmark: ${article.title}", )
         viewModelScope.launch {
             repository.addToBookmark(article)
         }

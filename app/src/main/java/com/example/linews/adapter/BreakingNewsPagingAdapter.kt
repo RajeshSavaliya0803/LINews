@@ -10,13 +10,18 @@ import com.example.linews.databinding.ItemBreakingNewsPostBinding
 import com.example.linews.model.ArticlesItem
 import com.example.linews.viewmodel.BreakingNewsViewModel
 
-class BreakingNewsPagingAdapter(private val viewModel: BreakingNewsViewModel) : PagingDataAdapter<ArticlesItem, BreakingNewsPagingAdapter.ViewHolder>(DIFF_CALLBACK) {
+class BreakingNewsPagingAdapter(private val onSaved: (article: ArticlesItem) -> Unit, private val onNewsClicked : (urls:String?) -> Unit) : PagingDataAdapter<ArticlesItem, BreakingNewsPagingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     inner class ViewHolder(private val itemBreakingNewsPostBinding: ItemBreakingNewsPostBinding) : RecyclerView.ViewHolder(itemBreakingNewsPostBinding.root){
         fun bind(item : ArticlesItem?){
             itemBreakingNewsPostBinding.setVariable(BR.articleItem,item)
-            itemBreakingNewsPostBinding.setVariable(BR.viewModel,viewModel)
             itemBreakingNewsPostBinding.executePendingBindings()
+            itemBreakingNewsPostBinding.root.setOnClickListener {
+                onNewsClicked(item?.url)
+            }
+            itemBreakingNewsPostBinding.removeNews.setOnClickListener {
+                onSaved(item!!)
+            }
         }
     }
 

@@ -7,12 +7,17 @@
         <variable
             name="articleItem"
             type="com.example.linews.model.ArticlesItem" />
+
+        <variable
+            name="viewModel"
+            type="com.example.linews.viewmodel.SavedNewsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        >
 
         <ImageView
             android:id="@+id/newsItemBanner"
@@ -79,8 +84,9 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginTop="8dp"
+            android:onClick="@{() -> viewModel.removeFromSaved(articleItem)}"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_bookmark"
+            android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newsItemBanner"

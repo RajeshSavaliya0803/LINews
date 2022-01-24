@@ -1,7 +1,6 @@
 package com.example.linews.data.repository
 
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -17,6 +16,8 @@ import javax.inject.Singleton
 
 @Singleton
 class NewsRepository @Inject constructor(private val apiService: ApiService, private val dao: SavedNewsDao) {
+
+    val savedNewsFlow : Flow<List<ArticlesItem>> get() = dao.getSavedNews()
 
     // assign method from remote data source
     fun getBreakingNews() : Flow<PagingData<ArticlesItem>> {
@@ -34,10 +35,12 @@ class NewsRepository @Inject constructor(private val apiService: ApiService, pri
 
 
      suspend  fun addToBookmark (article: ArticlesItem) = withContext(Dispatchers.IO){
-         Log.e("TAG", "Repo=> addBookmark: ${article.title}", )
-         Log.e("TAG", "Repo=> addBookmark: ${Thread.currentThread().name}", )
          dao.addBookMark(article)
      }
+
+    suspend fun removeFromSaved(article: ArticlesItem) = withContext(Dispatchers.IO){
+        dao.removeSavedNote(article)
+    }
 
 
 

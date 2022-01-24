@@ -22,7 +22,7 @@ data class Source(
 	val name: String? = null,
 
 	@field:SerializedName("id")
-	val sourceId: String? = null
+	val sourceId: Any? = null
 )
 
 
@@ -44,7 +44,6 @@ data class ArticlesItem(
 	@field:SerializedName("description")
 	val description: String? = null,
 
-	@Embedded
 	@field:SerializedName("source")
 	val source: Source? = null,
 

@@ -20,7 +20,6 @@ import com.example.linews.adapter.BreakingNewsPagingAdapter
 import com.example.linews.adapter.NetWorkStateAdapter
 import com.example.linews.databinding.FragmentBreakingNewsBinding
 import com.example.linews.viewmodel.BreakingNewsViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -29,8 +28,8 @@ import kotlinx.coroutines.launch
 class BreakingNewsFragment : Fragment() {
 
     private lateinit var binding: FragmentBreakingNewsBinding
-    private val viewModel : BreakingNewsViewModel by viewModels()
-    private lateinit var adapter : BreakingNewsPagingAdapter
+    private val viewModel: BreakingNewsViewModel by viewModels()
+    private lateinit var adapter: BreakingNewsPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,35 +49,44 @@ class BreakingNewsFragment : Fragment() {
         setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getBreakingNews().flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {
-                adapter.submitData(it)
-            }
+            viewModel.getBreakingNews().flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    adapter.submitData(it)
+                }
         }
     }
 
     private fun setupRecyclerView() {
-        binding.rvBreakingNews.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL,false)
 
-        adapter = BreakingNewsPagingAdapter(viewModel)
+        binding.rvBreakingNews.layoutManager =
+            LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
-        binding.rvBreakingNews.adapter = adapter.withLoadStateFooter(NetWorkStateAdapter{adapter.retry()})
+        adapter =
+            BreakingNewsPagingAdapter({ save ->
+                viewModel.addBookmark(save)
+                Toast.makeText(activity, "Bookmarked article", Toast.LENGTH_SHORT).show()
+            }, { open -> })
+
+        binding.rvBreakingNews.adapter =
+            adapter.withLoadStateFooter(NetWorkStateAdapter { adapter.retry() })
 
         adapter.addLoadStateListener { listener ->
-            when(listener.refresh){
+            when (listener.refresh) {
                 is LoadState.NotLoading -> {
-                    if(binding.refreshing == true){
+                    if (binding.refreshing == true) {
                         binding.refreshing = false
                         binding.hasData = adapter.itemCount != 0
                     }
-
-
                 }
                 LoadState.Loading -> {
                     binding.refreshing = true
-
                 }
                 is LoadState.Error -> {
-                    Toast.makeText(context, (listener.refresh as LoadState.Error).error.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        (listener.refresh as LoadState.Error).error.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
