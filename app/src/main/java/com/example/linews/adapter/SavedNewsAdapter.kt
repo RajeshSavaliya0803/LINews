@@ -12,13 +12,14 @@ import com.example.linews.databinding.ItemSavedNewsPostBinding
 import com.example.linews.model.ArticlesItem
 import com.example.linews.viewmodel.SavedNewsViewModel
 
-class SavedNewsAdapter(private val viewModel: SavedNewsViewModel, private val onItemClicked: (ArticlesItem) -> Unit) : ListAdapter<ArticlesItem,SavedNewsAdapter.ViewHolder>(
+class SavedNewsAdapter( private val onRemoveClicked: (ArticlesItem) -> Unit, private val openUrl: (String?) -> Unit) : ListAdapter<ArticlesItem,SavedNewsAdapter.ViewHolder>(
     DiffCallback) {
 
     inner class ViewHolder(private val binding: ItemSavedNewsPostBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(item: ArticlesItem){
-            binding.setVariable(BR.articleItem,item)
-            binding.setVariable(BR.viewModel,viewModel)
+            binding.setVariable(BR.savedArticle,item)
+            binding.root.setOnClickListener { openUrl(item.url) }
+            binding.removeNews.setOnClickListener { onRemoveClicked(item) }
             binding.executePendingBindings()
         }
     }

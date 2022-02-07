@@ -22,6 +22,7 @@ class BreakingNewsViewModel @Inject constructor(private  var repository: NewsRep
 
     fun addBookmark(article: ArticlesItem){
         viewModelScope.launch {
+            Log.e("TAG", "addBookmark: ${Thread.currentThread().name}", )
             repository.addToBookmark(article)
         }
     }

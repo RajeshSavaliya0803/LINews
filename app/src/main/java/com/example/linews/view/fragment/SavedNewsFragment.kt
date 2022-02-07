@@ -1,18 +1,23 @@
 package com.example.linews.view.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.linews.BR
 import com.example.linews.R
 import com.example.linews.adapter.SavedNewsAdapter
 import com.example.linews.databinding.FragmentBreakingNewsBinding
@@ -48,7 +53,10 @@ class SavedNewsFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 viewModel.savedNews.collect {
-                    adapter.submitList(it)
+                        adapter.submitList(it)
+                    Log.e("TAG", "onViewCreated: ${it.isNotEmpty()}", )
+                    binding.setVariable(BR.hasSavedData,it.isNotEmpty())
+                    binding.executePendingBindings()
                 }
             }
         }
@@ -57,9 +65,13 @@ class SavedNewsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.rvSavedNews.layoutManager = LinearLayoutManager(activity,RecyclerView.VERTICAL,false)
-        adapter = SavedNewsAdapter(viewModel){
-
-        }
+        adapter = SavedNewsAdapter({remove ->
+            viewModel.removeFromSaved(remove)
+            Toast.makeText(activity, "Bookmarked removed", Toast.LENGTH_SHORT).show()
+        },{url -> val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)})
         binding.rvSavedNews.adapter = adapter
+
     }
 }

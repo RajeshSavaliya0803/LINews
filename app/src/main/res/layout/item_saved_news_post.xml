@@ -5,12 +5,9 @@
 
     <data>
         <variable
-            name="articleItem"
+            name="savedArticle"
             type="com.example.linews.model.ArticlesItem" />
 
-        <variable
-            name="viewModel"
-            type="com.example.linews.viewmodel.SavedNewsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +22,7 @@
             android:layout_height="130dp"
             android:layout_marginEnd="8dp"
             android:scaleType="fitXY"
-            app:imageUrl="@{articleItem.urlToImage}"
+            app:imageUrl="@{savedArticle.urlToImage}"
             app:layout_constraintBottom_toTopOf="@+id/removeNews"
             app:layout_constraintEnd_toStartOf="@+id/newsItemTitle"
             app:layout_constraintHorizontal_bias="0.5"
@@ -38,7 +35,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="@{articleItem.title}"
+            android:text="@{savedArticle.title}"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -54,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:maxLines="4"
-            android:text="@{articleItem.description}"
+            android:text="@{savedArticle.description}"
             android:textSize="14sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/newsPublishedDate"
@@ -76,7 +73,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/newsItemBanner"
             app:layout_constraintTop_toBottomOf="@+id/newsDescription"
-            app:setFormattedDateText="@{articleItem.publishedAt}"
+            app:setFormattedDateText="@{savedArticle.publishedAt}"
             tools:text="30/11/2022" />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -84,7 +81,6 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginTop="8dp"
-            android:onClick="@{() -> viewModel.removeFromSaved(articleItem)}"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -23,6 +23,7 @@ fun imageUrl(imageView: ImageView, imageUrl: String?){
 
 @BindingAdapter("setHasData")
 fun setHasData(view: TextView, hasData: Boolean?){
+    Log.e("TAG", "setHasData: $hasData ", )
     view.visibility = if(hasData != null){
         if(!hasData) View.VISIBLE else View.GONE
     }

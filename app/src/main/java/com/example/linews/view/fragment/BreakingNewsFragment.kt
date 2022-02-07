@@ -1,5 +1,7 @@
 package com.example.linews.view.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -65,7 +67,11 @@ class BreakingNewsFragment : Fragment() {
             BreakingNewsPagingAdapter({ save ->
                 viewModel.addBookmark(save)
                 Toast.makeText(activity, "Bookmarked article", Toast.LENGTH_SHORT).show()
-            }, { open -> })
+            }, { url ->
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(url)
+                startActivity(intent)
+            })
 
         binding.rvBreakingNews.adapter =
             adapter.withLoadStateFooter(NetWorkStateAdapter { adapter.retry() })
