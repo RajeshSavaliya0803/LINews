@@ -34,13 +34,10 @@ class NewsRepository @Inject constructor(private val apiService: ApiService, pri
     }
 
 
-     suspend  fun addToBookmark (article: ArticlesItem) = withContext(Dispatchers.IO){
-         dao.addBookMark(article)
-     }
+     suspend  fun addToBookmark (article: ArticlesItem) = dao.addBookMark(article)
 
-    suspend fun removeFromSaved(article: ArticlesItem) = withContext(Dispatchers.IO){
-        dao.removeSavedNote(article)
-    }
+    suspend fun removeFromSaved(article: ArticlesItem) = dao.removeSavedNote(article)
+
 
 
 

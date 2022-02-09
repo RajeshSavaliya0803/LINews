@@ -9,18 +9,27 @@ import com.example.linews.BR
 import com.example.linews.databinding.ItemBreakingNewsPostBinding
 import com.example.linews.model.ArticlesItem
 import com.example.linews.viewmodel.BreakingNewsViewModel
+import okhttp3.internal.notify
 
-class BreakingNewsPagingAdapter(private val onSaved: (article: ArticlesItem) -> Unit, private val onNewsClicked : (urls:String?) -> Unit) : PagingDataAdapter<ArticlesItem, BreakingNewsPagingAdapter.ViewHolder>(DIFF_CALLBACK) {
+class BreakingNewsPagingAdapter(private val onBookmarked: (article: ArticlesItem) -> Unit, private val onNewsClicked : (urls:String?) -> Unit) : PagingDataAdapter<ArticlesItem, BreakingNewsPagingAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     inner class ViewHolder(private val itemBreakingNewsPostBinding: ItemBreakingNewsPostBinding) : RecyclerView.ViewHolder(itemBreakingNewsPostBinding.root){
         fun bind(item : ArticlesItem?){
             itemBreakingNewsPostBinding.setVariable(BR.articleItem,item)
+            itemBreakingNewsPostBinding.removeNews
             itemBreakingNewsPostBinding.executePendingBindings()
             itemBreakingNewsPostBinding.root.setOnClickListener {
                 onNewsClicked(item?.url)
             }
             itemBreakingNewsPostBinding.removeNews.setOnClickListener {
-                onSaved(item!!)
+                onBookmarked(item!!)
+                val snapShotNews = this@BreakingNewsPagingAdapter.snapshot().firstOrNull{snapShotArticle ->
+                    snapShotArticle?.title ==item.title
+                }
+
+                if(snapShotNews != null){
+                    snapShotNews.bookmarked = true
+                }
             }
         }
     }

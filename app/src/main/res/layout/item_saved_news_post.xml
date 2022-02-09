@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.linews.R"/>
         <variable
             name="savedArticle"
             type="com.example.linews.model.ArticlesItem" />
@@ -76,17 +77,20 @@
             app:setFormattedDateText="@{savedArticle.publishedAt}"
             tools:text="30/11/2022" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <ImageView
             android:id="@+id/removeNews"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginTop="8dp"
+            android:clickable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newsItemBanner"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
+            android:focusable="true"
+            app:tint="@{savedArticle.bookmarked ? R.color.purple_700 : R.color.gray}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

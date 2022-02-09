@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
@@ -50,14 +51,12 @@ class SavedNewsFragment : Fragment() {
 
         setupRecyclerView()
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.savedNews.collect {
-                        adapter.submitList(it)
-                    Log.e("TAG", "onViewCreated: ${it.isNotEmpty()}", )
-                    binding.setVariable(BR.hasSavedData,it.isNotEmpty())
-                    binding.executePendingBindings()
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.savedNews.flowWithLifecycle(lifecycle,Lifecycle.State.STARTED).collect {
+                adapter.submitList(it)
+                Log.e("TAG", "onViewCreated: ${it.isNotEmpty()}", )
+                binding.setVariable(BR.hasSavedData,it.isNotEmpty())
+                binding.executePendingBindings()
             }
         }
 

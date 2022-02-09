@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -36,3 +37,5 @@ fun setHasData(view: TextView, hasData: Boolean?){
 fun setFormattedDateText(view:TextView, unformattedDate : String?){
     view.text = unformattedDate?.convertDate()
 }
+
+
