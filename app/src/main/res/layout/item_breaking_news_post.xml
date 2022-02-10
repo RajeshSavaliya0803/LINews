@@ -87,8 +87,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newsItemBanner"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
-            android:focusable="true"
-            app:tint="@{articleItem.bookmarked ? R.color.purple_700 : R.color.gray}" />
+            android:focusable="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
